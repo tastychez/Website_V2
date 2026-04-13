@@ -12,6 +12,10 @@ export interface Project {
   techStack: string[];
   link?: string;
   github?: string;
+  devpost?: string;
+  image?: string;
+  imageClassName?: string;
+  featured?: boolean;
 }
 
 export interface SkillCategory {
@@ -95,6 +99,9 @@ export const projects: Project[] = [
       "Real-time hazard detection system for mines. Won 3rd in Social Impact and 4th in Hardware at Yale's YHack against 700+ participants. Features a live data pipeline integrating gas sensors and depth cameras via Raspberry Pi, plus a simulation to map tunnel geometry and model gas diffusion.",
     techStack: ["Python", "Raspberry Pi", "Sensors", "Simulation"],
     github: "https://github.com/tastychez/Canary",
+    devpost: "https://devpost.com/software/canary-axf7o2?ref_content=my-projects-tab&ref_feature=my_projects",
+    image: "/projects/canary.jpg",
+    featured: true,
   },
   {
     name: "AI.gamo — Agri-Tech Robot",
@@ -102,6 +109,34 @@ export const projects: Project[] = [
       "Bio-inspired, weed-uprooting robot for rice fields. Won 1st Place and $5,000 in seed funding at the Babson College Buildathon out of 500+ participants. Uses a trained Computer Vision model to differentiate invasive weeds from crops, with Arduino-driven motor control for targeted uprooting.",
     techStack: ["Computer Vision", "Python", "Arduino", "C++", "Motor Control"],
     github: "https://github.com/tastychez/rice_crop_detector",
+    image: "/projects/aigamo.jpg",
+    featured: true,
+  },
+  {
+    name: "Disc Golf Disc Cleaner",
+    description:
+      "Fully automated cleaning station combining AI-powered dirt detection, rotary encoder-based disc handling, and servo-actuated brush control. Built as a complete mechatronic system for Olin's PIE course, featuring a Python state machine, Roboflow CV model, and real-time LCD feedback.",
+    techStack: ["Python", "Roboflow", "OpenCV", "Raspberry Pi", "Robotics"],
+    link: "https://disc-golf-project.vercel.app/#/",
+    github: "https://github.com/ConnorHoang/Disk-Golf-Cleaner",
+    image: "/projects/disc-golf.jpg",
+    featured: true,
+  },
+  {
+    name: "Rocky — Self-Balancing Robot",
+    description:
+      "Inverted pendulum balancing robot built on a Pololu Balboa platform. Designed a 5-pole PI controller for simultaneous angle stabilization and stationary position hold, modeled in MATLAB/Simulink, then empirically tuned on hardware to handle real-world motor delay and saturation.",
+    techStack: ["MATLAB", "Simulink", "C++", "Arduino", "Control Systems"],
+    link: "https://www.youtube.com/shorts/h7tqY11KXBA",
+    image: "/projects/rocky.jpg",
+  },
+  {
+    name: "RV32I Multicycle Processor",
+    description:
+      "32-bit RISC-V integer microprocessor with Harvard architecture, designed in SystemVerilog. Features an FSM-based multicycle control unit, full RV32I instruction set support, and hardware peripheral I/O. Verified with Icarus Verilog and deployed on an iCE40UP5K FPGA.",
+    techStack: ["SystemVerilog", "RISC-V", "FPGA", "Icarus Verilog"],
+    github: "https://github.com/We1chJ/iceBlinkPico/tree/xmp4",
+    image: "/projects/riscv.jpg",
   },
   {
     name: "Balloon Tower Defense",
@@ -110,6 +145,8 @@ export const projects: Project[] = [
     techStack: ["Python", "Pygame", "OOP"],
     link: "https://balloon-td-0.vercel.app/",
     github: "https://github.com/tastychez/BalloonTD0",
+    image: "/projects/balloon-td.png",
+    imageClassName: "object-cover object-top",
   },
   {
     name: "Hand Gesture Recognition",
@@ -117,23 +154,25 @@ export const projects: Project[] = [
       "A desktop application that maps real-time hand gestures from webcam input to emojis using computer vision and machine learning.",
     techStack: ["Python", "OpenCV", "MediaPipe", "PyQt6"],
     github: "https://github.com/tastychez/hand_gesture_detector",
+    image: "/projects/hand-gesture.png",
   },
   {
     name: "Arduino Line-Following Robot",
     description:
       "Designed and built an autonomous robot to navigate a taped track using closed-loop feedback control with sensor integration.",
     techStack: ["C++", "Arduino", "Python", "Robotics"],
+    image: "/projects/line-robot.jpeg",
   },
 ];
 
 export const skillCategories: SkillCategory[] = [
   {
     category: "Languages",
-    skills: ["Python", "C", "C++", "Java", "MATLAB", "HTML/CSS"],
+    skills: ["Python", "C", "C++", "Java", "TypeScript", "MATLAB", "HTML/CSS"],
   },
   {
     category: "AI & ML",
-    skills: ["Machine Learning", "Computer Vision", "LLM Orchestration", "Agentic Workflows"],
+    skills: ["Machine Learning", "Computer Vision", "LLM Orchestration", "Agentic Workflows", "MCP Servers"],
   },
   {
     category: "Web & Frameworks",
