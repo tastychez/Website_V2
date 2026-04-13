@@ -140,8 +140,35 @@ function createScene(
 
   Matter.Composite.add(engine.world, mouseConstraint);
 
+  // Dynamic cursor: default → grab on hover → grabbing while dragging
+  let dragging = false;
+  Matter.Events.on(mouseConstraint, "startdrag", () => {
+    dragging = true;
+    canvas.style.cursor = "grabbing";
+  });
+  Matter.Events.on(mouseConstraint, "enddrag", () => {
+    dragging = false;
+  });
+  Matter.Events.on(engine, "afterUpdate", () => {
+    if (dragging) return;
+    const hovering = Matter.Query.point(bodies, mouse.position).length > 0;
+    canvas.style.cursor = hovering ? "grab" : "default";
+  });
+
+  // "move us!" bubble attached to a specific block
+  let bubbleBody: Matter.Body | null = null;
+  let bubbleOpacity = 0;
+  let bubbleFadeStart = 0;
+  const BUBBLE_VISIBLE = 3500;
+  const BUBBLE_FADE = 600;
+
+  Matter.Events.on(mouseConstraint, "startdrag", () => {
+    bubbleOpacity = 0;
+  });
+
   Matter.Events.on(render, "afterRender", () => {
     const ctx = render.context as CanvasRenderingContext2D;
+
     bodies.forEach((body) => {
       const { x, y } = body.position;
       ctx.save();
@@ -154,12 +181,86 @@ function createScene(
       ctx.fillText(body.label, 0, 0);
       ctx.restore();
     });
+
+    if (bubbleBody && bubbleOpacity > 0) {
+      if (bubbleFadeStart > 0) {
+        const elapsed = Date.now() - bubbleFadeStart;
+        bubbleOpacity = Math.max(0, 1 - elapsed / BUBBLE_FADE);
+      }
+
+      const bx = bubbleBody.position.x;
+      const by = bubbleBody.position.y - blockSize - 18;
+      const text = "move us!";
+      const pad = 14;
+      const bubbleFontSize = Math.round(blockSize * 0.42);
+
+      ctx.save();
+      ctx.globalAlpha = bubbleOpacity;
+      ctx.font = `bold ${bubbleFontSize}px 'Nunito', sans-serif`;
+      const tw = ctx.measureText(text).width;
+      const bw = tw + pad * 2;
+      const bh = bubbleFontSize + pad;
+      const r = 10;
+      const left = bx - bw / 2;
+      const top = by - bh / 2;
+
+      ctx.fillStyle = "#3E000C";
+      ctx.beginPath();
+      ctx.moveTo(left + r, top);
+      ctx.lineTo(left + bw - r, top);
+      ctx.quadraticCurveTo(left + bw, top, left + bw, top + r);
+      ctx.lineTo(left + bw, top + bh - r);
+      ctx.quadraticCurveTo(left + bw, top + bh, left + bw - r, top + bh);
+      ctx.lineTo(bx + 6, top + bh);
+      ctx.lineTo(bx, top + bh + 8);
+      ctx.lineTo(bx - 6, top + bh);
+      ctx.lineTo(left + r, top + bh);
+      ctx.quadraticCurveTo(left, top + bh, left, top + bh - r);
+      ctx.lineTo(left, top + r);
+      ctx.quadraticCurveTo(left, top, left + r, top);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = "#FFCBDD";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, bx, by);
+      ctx.restore();
+    }
   });
 
   const runner = Matter.Runner.create();
 
   Matter.Render.run(render);
   Matter.Runner.run(runner, engine);
+
+  // Wave bounce once all blocks have settled from the initial drop
+  let waveTriggered = false;
+  const STAGGER = 80;
+  const force = height * 0.00035;
+
+  Matter.Events.on(engine, "afterUpdate", () => {
+    if (waveTriggered) return;
+    const allSettled = bodies.every((b) => {
+      const speed = Matter.Body.getSpeed(b);
+      return speed < 0.3 && b.position.y > 0;
+    });
+    if (!allSettled) return;
+    waveTriggered = true;
+
+    const lastIndex = bodies.length - 1;
+    bubbleBody = bodies[lastIndex];
+    bubbleOpacity = 1;
+
+    bodies.forEach((body, i) => {
+      setTimeout(() => {
+        Matter.Body.applyForce(body, body.position, { x: 0, y: -force });
+      }, i * STAGGER);
+    });
+
+    const waveEnd = lastIndex * STAGGER;
+    setTimeout(() => { bubbleFadeStart = Date.now(); }, waveEnd + BUBBLE_VISIBLE);
+  });
 
   return { engine, render, runner, mouse };
 }
@@ -202,7 +303,7 @@ export default function PhysicsHero() {
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"
         style={{
-          cursor: "grab",
+          cursor: "default",
           opacity: ready ? 1 : 0,
           transition: "opacity 0.6s ease-in-out",
           touchAction: "auto",
