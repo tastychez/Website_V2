@@ -123,6 +123,8 @@ function createScene(
   Matter.Composite.add(engine.world, [...walls, ...bodies]);
 
   const mouse = Matter.Mouse.create(render.canvas);
+  // Fix Matter.js parseInt() truncation of fractional devicePixelRatio (e.g. Chrome zoom)
+  (mouse as any).pixelRatio = window.devicePixelRatio || 1;
   const mouseConstraint = Matter.MouseConstraint.create(engine, {
     mouse,
     constraint: { stiffness: 0.2, render: { visible: false } },
