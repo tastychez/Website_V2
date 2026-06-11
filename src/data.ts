@@ -29,14 +29,16 @@ export interface SkillCategory {
 export const experiences: Experience[] = [
   {
     company: "Amazon Web Services (AWS)",
-    role: "Incoming Software Development Engineer Intern",
-    date: "May 2026 — Aug 2026",
-    bullets: [],
+    role: "Software Development Engineer Intern",
+    date: "May 2026 — Current",
+    bullets: [
+      "Amazon Linux security team.",
+    ],
   },
   {
     company: "CG Creative Studios",
     role: "Technical Consultant & Project Manager",
-    date: "Jan 2026 — Present",
+    date: "Jan 2026 — May 2026",
     bullets: [
       "Directed a 4-person engineering team to architect an automated Scope of Work (SOW) generation pipeline, replacing manual documentation workflows with a scalable, AI-assisted system.",
       "Engineered a standardized SOW library with integrated pricing data, reducing drafting time and version errors.",
@@ -45,7 +47,7 @@ export const experiences: Experience[] = [
   {
     company: "Town of Wellesley, MA",
     role: "Strategy Consultant",
-    date: "Jan 2026 — Present",
+    date: "Jan 2026 — May 2026",
     bullets: [
       "Advised city leadership on optimizing municipal waste logistics, evaluating financial, environmental, and operational tradeoffs between centralized drop-off and modernized curbside collection models.",
       "Conducted stakeholder analysis and lifecycle modeling to measure greenhouse gas emissions and costs, presenting data-driven recommendations in weekly client briefings.",
